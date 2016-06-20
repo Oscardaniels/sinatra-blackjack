@@ -1,0 +1,56 @@
+<h1>Blackjack!</h1>
+
+<% if @gameover == true %>
+  <form>
+
+  </form>
+<% end %>
+
+<p>Welcome <%= session[:player_name] %></p>
+
+<h4>Dealer's Cards:</h4>
+
+<% if @show_hole_card == true %>
+<div class="well">
+  <% card_converter(session[:dealer_cards]).each do |card| %>
+    <img class="card_image" src=<%= card %> />
+  <% end %>
+</div>
+
+  <p> Dealer Total is: <%= calculate_total(session[:dealer_cards]) %> </p>
+  <% if @gameover == false %>
+    <form action="/game/dealer/hit" method="post">
+      <input type="submit" class="btn btn-success" value="Click to see Dealer's Next Card">
+    </form>
+  <% end %>  
+<% else %>
+<div class="well">
+  <img class="card_image" src="/images/cards/cover.jpg" />
+  <img class="card_image" src=<%= card_converter([session[:dealer_cards][1]]).first %> />
+</div>
+<% end %>
+<br/>
+
+<h4>Player's Cards:</h4>
+
+<div class="well">
+  <% card_converter(session[:player_cards]).each do |card_image| %>
+    <img src=<%=card_image%> class='card_image'/> 
+  <% end %>
+</div>
+<p>
+  <%= session[:player_name]%>, your total is: <%= calculate_total(session[:player_cards]) %>
+</p>
+
+<% if @gameover == false %>
+  <% if @show_hit_or_stay_buttons %>
+    <p>Would <%= session[:player_name] %> like to hit or stay?</p>
+    <form id="hit_form" action="/game/player/hit" method="post">
+      <input type="Submit" class="btn btn-success" value="Hit" />
+    </form>
+
+    <form id="stay_form" action="/game/player/stay" method="post">  
+      <input type="Submit" class="btn btn-warning" value="Stay" />
+    </form>
+  <% end %>
+<% end %>   
