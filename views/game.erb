@@ -1,12 +1,15 @@
-<h1>Blackjack</h1>
+<h1>Blackjack!</h1>
 
 <% if @gameover == true %>
-  <form>
-
-  </form>
+    <form id="play_again" action="/game" method="get">
+      <input type="submit" class="btn" value="Yes">
+    </form>
+    <form id="no_play_again" action="/player_done" method="get">
+      <input type="submit" class="btn" value="No">
+    </form>
 <% end %>
 
-<p>Welcome <%= session[:player_name] %></p>
+<h3>Welcome, <%= session[:player_name] %>!</h3>
 
 <h4>Dealer's Cards:</h4>
 
@@ -17,7 +20,7 @@
   <% end %>
 </div>
 
-  <p> Dealer Total is: <%= calculate_total(session[:dealer_cards]) %> </p>
+  <h4> Dealer Total is: <%= calculate_total(session[:dealer_cards]) %> </h4>
   <% if @gameover == false %>
     <form action="/game/dealer/hit" method="post">
       <input type="submit" class="btn btn-success" value="Click to see Dealer's Next Card">
@@ -28,6 +31,7 @@
   <img class="card_image" src="/images/cards/cover.jpg" />
   <img class="card_image" src=<%= card_converter([session[:dealer_cards][1]]).first %> />
 </div>
+<h4> Dealer Total is: ?? </h4>
 <% end %>
 <br/>
 
@@ -38,13 +42,13 @@
     <img src=<%=card_image%> class='card_image'/> 
   <% end %>
 </div>
-<p>
+<h4>
   <%= session[:player_name]%>, your total is: <%= calculate_total(session[:player_cards]) %>
-</p>
+</h4>
 
 <% if @gameover == false %>
   <% if @show_hit_or_stay_buttons %>
-    <p>Would <%= session[:player_name] %> like to hit or stay?</p>
+    <h4>Would <%= session[:player_name] %> like to hit or stay?</h4>
     <form id="hit_form" action="/game/player/hit" method="post">
       <input type="Submit" class="btn btn-success" value="Hit" />
     </form>

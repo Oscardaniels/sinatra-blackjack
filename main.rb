@@ -106,7 +106,7 @@ post '/new_player' do
 
   if params[:player_name].empty?
     @error = "Name is required. "
-    halt erb(:new_player)
+    halt erb :new_player
   end
   session[:player_name] = params[:player_name]
   redirect '/game'
@@ -142,6 +142,7 @@ post '/game/player/hit' do
     player_total = calculate_total(session[:player_cards])
     if player_total == 21
       @success = "Congratulations! #{session[:player_name]} hit blackjack!"
+      @show_hit_or_stay_buttons = false
       @gameover = true
     elsif player_total > 21
       @error = "Sorry, it looks like #{session[:player_name]} busted."
@@ -159,7 +160,7 @@ post '/game/player/stay' do
   if dealer_total == 21
     @gameover = true
     @error = "Dealer has blackjack. #{session[:player_name]} loses."
-  elsif dealer_total > player_total
+  elsif dealer_total > player_total && dealer_total > 17
     @gameover = true
     @error = "Dealer has #{dealer_total}.  #{session[:player_name]} loses."
   elsif dealer_total == player_total && dealer_total >= 17
@@ -186,9 +187,7 @@ post '/game/dealer/hit' do
   elsif dealer_total == 21
     @gameover = true
     @error = "#{session[:player_name]} loses.The dealer has blackjack."
-  elsif dealer_total < 17
-    redirect "/game/dealer/hit"
-  else 
+  elsif dealer_total > 17
     redirect "/game/dealer/stay"
   end  
   erb :game
@@ -208,5 +207,10 @@ get '/game/dealer/stay' do
     @success = "#{session[:player_name]} wins with #{player_total}"
   end
   erb :game
+end
+
+get '/player_done' do
+  session[:player_name] = nil
+  redirect '/'
 end
 
