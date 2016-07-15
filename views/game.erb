@@ -1,19 +1,16 @@
 <h1>Blackjack!</h1>
 
 <% if @gameover == true %>
-    <form id="play_again" action="/game" method="get">
-      <input type="submit" class="btn" value="Yes">
-    </form>
-    <form id="no_play_again" action="/player_done" method="get">
-      <input type="submit" class="btn" value="No">
-    </form>
+  <strong>Would you like to play again?</strong>
+  <a href="/game" class="btn btn-primary">Yes</a>
+  <a href="/gameover" class="btn">No</a>
 <% end %>
 
 <h3>Welcome, <%= session[:player_name] %>!</h3>
 
 <h4>Dealer's Cards:</h4>
 
-<% if @show_hole_card == true %>
+<% if session[:turn] == "dealer" %>
 <div class="well">
   <% card_converter(session[:dealer_cards]).each do |card| %>
     <img class="card_image" src=<%= card %> />
@@ -23,7 +20,7 @@
   <h4> Dealer Total is: <%= calculate_total(session[:dealer_cards]) %> </h4>
   <% if @gameover == false %>
     <form action="/game/dealer/hit" method="post">
-      <input type="submit" class="btn btn-success" value="Click to see Dealer's Next Card">
+      <input type="submit" class="btn btn-primary" value="Click to see Dealer's Next Card">
     </form>
   <% end %>  
 <% else %>
@@ -37,7 +34,7 @@
 
 <h4>Player's Cards:</h4>
 
-<div class="well">
+<div class="well" id='player_area'>
   <% card_converter(session[:player_cards]).each do |card_image| %>
     <img src=<%=card_image%> class='card_image'/> 
   <% end %>
